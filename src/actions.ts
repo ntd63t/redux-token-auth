@@ -176,8 +176,10 @@ const generateAuthActions = (config: { [key: string]: any }): ActionsExport => {
         url: `${authUrl}/validate_token`,
         params: verificationParams,
       })
-      setAuthHeaders(response.headers)
-      persistAuthHeadersInDeviceStorage(Storage, response.headers)
+      if (response.headers['access-token']) {
+        setAuthHeaders(response.headers)
+        persistAuthHeadersInDeviceStorage(Storage, response.headers)
+      }
       const userAttributesToSave = getUserAttributesFromResponse(userAttributes, response)
       dispatch(verifyTokenRequestSucceeded(userAttributesToSave))
     } catch (error) {
